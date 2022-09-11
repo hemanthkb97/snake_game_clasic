@@ -34,13 +34,16 @@ https://user-images.githubusercontent.com/62005727/189520029-0142f74a-266a-4ee7-
 
 ## Screenshots
 
-![](preview_files/s1.png)
-![](preview_files/s2.png)
-![](preview_files/s3.png)
-![](preview_files/s4.png)
-![](preview_files/s5.png)
-![](preview_files/s6.png)
-![](preview_files/s7.png)
+<p float="left">
+  <img src="preview_files/s1.png" width="200" />
+  <img src="preview_files/s2.png" width="200" />
+  <img src="preview_files/s3.png" width="200" />
+  <img src="preview_files/s4.png" width="200" />
+  <img src="preview_files/s5.png" width="200" />
+  <img src="preview_files/s6.png" width="200" />
+  <img src="preview_files/s7.png" width="200" />
+</p>
+
 
 
 
