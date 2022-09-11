@@ -3,7 +3,7 @@
 <h4>The game is a remake of the original Snake II with pixel graphics and monophonic sounds. The goal is to make as many points as possible by making the snake eat stuff that shows up. The more you eat the longer will the snake grow. If the snake collides with itself the game ends.</h4>
 <br/>
 
-preview_files/snake_game_demo.mp4
+https://github.com/hemanthkb97/snake_game_clasic/blob/main/preview_files/snake_game_demo.mp4
 
 <br/>
 
