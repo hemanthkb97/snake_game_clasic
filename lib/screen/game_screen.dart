@@ -103,6 +103,9 @@ class _GameScreenState extends State<GameScreen> {
             }
           },
           onHorizontalDragUpdate: (details) {
+            if (dead) {
+              return;
+            }
             if (start) {
               if (direction != Direction.left && details.delta.dx > 0) {
                 if (direction != Direction.right &&
@@ -120,153 +123,158 @@ class _GameScreenState extends State<GameScreen> {
               startGame();
             }
           },
-          child: RepaintBoundary(
-            child: Center(
-              child: SizedBox(
-                width: 450,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 32,
-                        ),
-                        Text(
-                          score.toString().padLeft(4, "0"),
-                          style: const TextStyle(
-                              fontSize: 32, fontWeight: FontWeight.w600),
-                        ),
-                        const Spacer(),
-                        if (bigFood.show)
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: RepaintBoundary(
+              child: Center(
+                child: SizedBox(
+                  width: 450,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 32,
+                          ),
                           Text(
-                            bigFood.time.toString().padLeft(2, "0"),
+                            score.toString().padLeft(4, "0"),
                             style: const TextStyle(
                                 fontSize: 32, fontWeight: FontWeight.w600),
                           ),
-                        const SizedBox(
-                          width: 32,
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                      child: Divider(
-                        thickness: 4,
-                        height: 2,
-                        color: Colors.black,
+                          const Spacer(),
+                          if (bigFood.show)
+                            Text(
+                              bigFood.time.toString().padLeft(2, "0"),
+                              style: const TextStyle(
+                                  fontSize: 32, fontWeight: FontWeight.w600),
+                            ),
+                          const SizedBox(
+                            width: 32,
+                          ),
+                        ],
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                        width: 4,
-                      )),
-                      child: Container(
-                        decoration: BoxDecoration(border: Border.all(width: 2)),
-                        constraints: const BoxConstraints(
-                            maxWidth: 352 + 16,
-                            minWidth: 352 + 16,
-                            maxHeight: 560 + 16,
-                            minHeight: 560 + 16),
-                        child: Center(
-                          child: Stack(
-                            children: [
-                              ...List.generate(
-                                  snakeBodys.length,
-                                  (index) => Visibility(
-                                        visible: !deathFlicker,
-                                        replacement: const SizedBox(),
-                                        child: Positioned(
-                                            left: snakeBodys[index].offset.dx,
-                                            top: snakeBodys[index].offset.dy,
-                                            child: getSnakeBody(
-                                                snakeBodys[index],
-                                                index,
-                                                snakeBodys.length)),
-                                      )),
-                              Positioned(
-                                  left: food.offset.dx,
-                                  top: food.offset.dy,
-                                  child: snakeFood),
-                              if (bigFood.show)
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                        child: Divider(
+                          thickness: 4,
+                          height: 2,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                          width: 4,
+                        )),
+                        child: Container(
+                          decoration:
+                              BoxDecoration(border: Border.all(width: 2)),
+                          constraints: const BoxConstraints(
+                              maxWidth: 352 + 16,
+                              minWidth: 352 + 16,
+                              maxHeight: 560 + 16,
+                              minHeight: 560 + 16),
+                          child: Center(
+                            child: Stack(
+                              children: [
+                                ...List.generate(
+                                    snakeBodys.length,
+                                    (index) => Visibility(
+                                          visible: !deathFlicker,
+                                          replacement: const SizedBox(),
+                                          child: Positioned(
+                                              left: snakeBodys[index].offset.dx,
+                                              top: snakeBodys[index].offset.dy,
+                                              child: getSnakeBody(
+                                                  snakeBodys[index],
+                                                  index,
+                                                  snakeBodys.length)),
+                                        )),
                                 Positioned(
-                                    left: bigFood.offset.dx,
-                                    top: bigFood.offset.dy,
-                                    child: geekyFood),
-                            ],
+                                    left: food.offset.dx,
+                                    top: food.offset.dy,
+                                    child: snakeFood),
+                                if (bigFood.show)
+                                  Positioned(
+                                      left: bigFood.offset.dx,
+                                      top: bigFood.offset.dy,
+                                      child: geekyFood),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                      child: Divider(
-                        thickness: 4,
-                        height: 2,
-                        color: Colors.black,
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                        child: Divider(
+                          thickness: 4,
+                          height: 2,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 32,
-                        ),
-                        Row(
-                          children: [
-                            const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: FittedBox(
-                                  child: Icon(
-                                    Icons.ac_unit_rounded,
-                                    color: Colors.black,
-                                  ),
-                                )),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              food.count.toString().padLeft(3, "0"),
-                              style: const TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: Image(
-                                  image: AssetImage(AssetFiles.geekyImage),
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.none,
-                                )),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              bigFood.count.toString().padLeft(3, "0"),
-                              style: const TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 32,
-                        ),
-                      ],
-                    ),
-                  ],
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 32,
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: FittedBox(
+                                    child: Icon(
+                                      Icons.ac_unit_rounded,
+                                      color: Colors.black,
+                                    ),
+                                  )),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                food.count.toString().padLeft(3, "0"),
+                                style: const TextStyle(
+                                    fontSize: 28, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Row(
+                            children: [
+                              SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: Image(
+                                    image: AssetImage(AssetFiles.geekyImage),
+                                    fit: BoxFit.cover,
+                                    filterQuality: FilterQuality.none,
+                                  )),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                bigFood.count.toString().padLeft(3, "0"),
+                                style: const TextStyle(
+                                    fontSize: 28, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 32,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -298,7 +306,6 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   gameOverAlert() {
-    dead = false;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -440,6 +447,7 @@ class _GameScreenState extends State<GameScreen> {
             ));
       },
     );
+    dead = false;
   }
 
   Offset getOffsetforPos(int pos) {
