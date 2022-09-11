@@ -35,97 +35,100 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RawKeyboardListener(
-        autofocus: true,
-        focusNode: FocusNode(),
-        onKey: (value) {
+      body: GestureDetector(
+        onVerticalDragUpdate: (details) {
           if (dead) {
             return;
           }
-          if (value.isKeyPressed(LogicalKeyboardKey.escape)) {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const WelcomeScreen(),
-            ));
-          }
           if (start) {
-            if (value.isKeyPressed(LogicalKeyboardKey.arrowUp) ||
-                value.isKeyPressed(LogicalKeyboardKey.keyW)) {
-              if (direction != Direction.up && direction != Direction.down) {
-                direction = Direction.up;
-              }
-            } else if (value.isKeyPressed(LogicalKeyboardKey.arrowDown) ||
-                value.isKeyPressed(LogicalKeyboardKey.keyS)) {
+            if (direction != Direction.up && details.delta.dy > 0) {
               if (direction != Direction.down && direction != Direction.up) {
                 direction = Direction.down;
               }
-            } else if (value.isKeyPressed(LogicalKeyboardKey.arrowLeft) ||
-                value.isKeyPressed(LogicalKeyboardKey.keyA)) {
-              if (direction != Direction.left && direction != Direction.right) {
-                direction = Direction.left;
+            }
+            if (direction != Direction.down && details.delta.dy < 0) {
+              if (direction != Direction.up && direction != Direction.down) {
+                direction = Direction.up;
               }
-            } else if (value.isKeyPressed(LogicalKeyboardKey.arrowRight) ||
-                value.isKeyPressed(LogicalKeyboardKey.keyD)) {
+            }
+          } else {
+            startGame();
+          }
+        },
+        onHorizontalDragUpdate: (details) {
+          if (dead) {
+            return;
+          }
+          if (start) {
+            if (direction != Direction.left && details.delta.dx > 0) {
               if (direction != Direction.right && direction != Direction.left) {
                 direction = Direction.right;
               }
             }
-          } else if ([
-            LogicalKeyboardKey.arrowUp,
-            LogicalKeyboardKey.keyW,
-            LogicalKeyboardKey.arrowDown,
-            LogicalKeyboardKey.keyS,
-            LogicalKeyboardKey.arrowLeft,
-            LogicalKeyboardKey.keyA,
-            LogicalKeyboardKey.arrowRight,
-            LogicalKeyboardKey.keyD
-          ].contains(value.logicalKey)) {
+            if (direction != Direction.right && details.delta.dx < 0) {
+              if (direction != Direction.left && direction != Direction.right) {
+                direction = Direction.left;
+              }
+            }
+          } else {
             startGame();
           }
         },
-        child: GestureDetector(
-          onVerticalDragUpdate: (details) {
-            if (dead) {
-              return;
-            }
-            if (start) {
-              if (direction != Direction.up && details.delta.dy > 0) {
-                if (direction != Direction.down && direction != Direction.up) {
-                  direction = Direction.down;
-                }
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: Theme.of(context).canvasColor,
+          child: RawKeyboardListener(
+            autofocus: true,
+            focusNode: FocusNode(),
+            onKey: (value) {
+              if (dead) {
+                return;
               }
-              if (direction != Direction.down && details.delta.dy < 0) {
-                if (direction != Direction.up && direction != Direction.down) {
-                  direction = Direction.up;
-                }
+              if (value.isKeyPressed(LogicalKeyboardKey.escape)) {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const WelcomeScreen(),
+                ));
               }
-            } else {
-              startGame();
-            }
-          },
-          onHorizontalDragUpdate: (details) {
-            if (dead) {
-              return;
-            }
-            if (start) {
-              if (direction != Direction.left && details.delta.dx > 0) {
-                if (direction != Direction.right &&
-                    direction != Direction.left) {
-                  direction = Direction.right;
+              if (start) {
+                if (value.isKeyPressed(LogicalKeyboardKey.arrowUp) ||
+                    value.isKeyPressed(LogicalKeyboardKey.keyW)) {
+                  if (direction != Direction.up &&
+                      direction != Direction.down) {
+                    direction = Direction.up;
+                  }
+                } else if (value.isKeyPressed(LogicalKeyboardKey.arrowDown) ||
+                    value.isKeyPressed(LogicalKeyboardKey.keyS)) {
+                  if (direction != Direction.down &&
+                      direction != Direction.up) {
+                    direction = Direction.down;
+                  }
+                } else if (value.isKeyPressed(LogicalKeyboardKey.arrowLeft) ||
+                    value.isKeyPressed(LogicalKeyboardKey.keyA)) {
+                  if (direction != Direction.left &&
+                      direction != Direction.right) {
+                    direction = Direction.left;
+                  }
+                } else if (value.isKeyPressed(LogicalKeyboardKey.arrowRight) ||
+                    value.isKeyPressed(LogicalKeyboardKey.keyD)) {
+                  if (direction != Direction.right &&
+                      direction != Direction.left) {
+                    direction = Direction.right;
+                  }
                 }
+              } else if ([
+                LogicalKeyboardKey.arrowUp,
+                LogicalKeyboardKey.keyW,
+                LogicalKeyboardKey.arrowDown,
+                LogicalKeyboardKey.keyS,
+                LogicalKeyboardKey.arrowLeft,
+                LogicalKeyboardKey.keyA,
+                LogicalKeyboardKey.arrowRight,
+                LogicalKeyboardKey.keyD
+              ].contains(value.logicalKey)) {
+                startGame();
               }
-              if (direction != Direction.right && details.delta.dx < 0) {
-                if (direction != Direction.left &&
-                    direction != Direction.right) {
-                  direction = Direction.left;
-                }
-              }
-            } else {
-              startGame();
-            }
-          },
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            },
             child: RepaintBoundary(
               child: Center(
                 child: SizedBox(

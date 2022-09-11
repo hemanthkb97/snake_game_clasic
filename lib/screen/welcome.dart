@@ -34,19 +34,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     width: 225,
                     height: 140,
                   ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  const Text(
-                    "---------------------------------",
-                    maxLines: 1,
-                    style: TextStyle(
-                        fontFamily: "Dotted3",
-                        fontSize: 32,
-                        fontWeight: FontWeight.normal),
-                  ),
-                  const SizedBox(
-                    height: 16,
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                    child: Divider(
+                      thickness: 4,
+                      height: 2,
+                      color: Colors.black,
+                    ),
                   ),
                   Consumer<MenuAndSettingsProvider>(
                     builder: (context, provider, child) {
