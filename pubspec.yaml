@@ -39,6 +39,7 @@ dependencies:
   provider: ^6.0.3
   just_audio: ^0.9.28
   dotted_border: ^2.0.0+2
+  flutter_native_splash: ^2.2.9
 
 dev_dependencies:
   flutter_test:
@@ -65,10 +66,8 @@ flutter:
   assets:
     - assets/
     - assets/sounds/theme_song.mp3
-    - assets/sounds/key_tic.mp3
-    - assets/sounds/game_over.mp3
-    - assets/sounds/snake_food_tic.m4a
-    - assets/sounds/snake_game_over.m4a
+    - assets/sounds/snake_food_tic.mp3
+    - assets/sounds/snake_game_over.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -105,3 +104,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_native_splash:
+  color: "#6dac85"
+  web: true

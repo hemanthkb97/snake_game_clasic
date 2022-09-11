@@ -51,19 +51,17 @@ class MenuAndSettingsProvider extends ChangeNotifier {
     }
   }
 
-  playDiedPlayer() {
+  playDiedPlayer() async {
     if (sound) {
-      diedPlayer.play().then((value) => diedPlayer
-          .setAsset(AssetFiles.snakeDiedSound)
-          .then((value) => diedPlayer.stop()));
+      await diedPlayer.setAsset(AssetFiles.snakeDiedSound);
+      diedPlayer.play();
     }
   }
 
-  playEatSound() {
+  playEatSound() async {
     if (sound) {
-      eatPlayer.play().then((value) => eatPlayer
-          .setAsset(AssetFiles.snakeEatSound)
-          .then((value) => eatPlayer.stop()));
+      await eatPlayer.setAsset(AssetFiles.snakeEatSound);
+      await eatPlayer.play();
     }
   }
 
