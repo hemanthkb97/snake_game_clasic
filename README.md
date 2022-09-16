@@ -5,6 +5,13 @@
 ##DEMO
 <br/>
 
+## Demo
+
+You can try web version [here](https://clasicsnakegame.web.app/#/)
+
+
+
+
 https://user-images.githubusercontent.com/62005727/189520029-0142f74a-266a-4ee7-bb24-1e10ab8ab103.mp4
 
 <br/>
