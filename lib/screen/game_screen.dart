@@ -35,7 +35,9 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /// For detecting touch drag
       body: GestureDetector(
+        // for checking up and down
         onVerticalDragUpdate: (details) {
           if (dead) {
             return;
@@ -52,9 +54,12 @@ class _GameScreenState extends State<GameScreen> {
               }
             }
           } else {
+            /// If game is not started and did drag action
+            /// this start the game
             startGame();
           }
         },
+        // for checking left or right
         onHorizontalDragUpdate: (details) {
           if (dead) {
             return;
@@ -71,6 +76,8 @@ class _GameScreenState extends State<GameScreen> {
               }
             }
           } else {
+            /// If game is not started and did drag action
+            /// this start the game
             startGame();
           }
         },
@@ -78,9 +85,12 @@ class _GameScreenState extends State<GameScreen> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           color: Theme.of(context).canvasColor,
+          // For listen to key events
           child: RawKeyboardListener(
             autofocus: true,
             focusNode: FocusNode(),
+            // We will check which key is pressed and change direction
+            // accordingly
             onKey: (value) {
               if (dead) {
                 return;
@@ -126,6 +136,8 @@ class _GameScreenState extends State<GameScreen> {
                 LogicalKeyboardKey.arrowRight,
                 LogicalKeyboardKey.keyD
               ].contains(value.logicalKey)) {
+                /// If game is not started and pressed on key
+                /// this start the game
                 startGame();
               }
             },
@@ -299,6 +311,7 @@ class _GameScreenState extends State<GameScreen> {
     super.dispose();
   }
 
+  // checks weather snake eat its body
   bool gameOver() {
     final copyList = List.from(snakeBodys.map((e) => e.position)).toList();
     if (snakeBodys.length > copyList.toSet().length) {
@@ -308,6 +321,7 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  /// Shows game Over alert
   gameOverAlert() {
     showDialog(
       context: context,
@@ -453,14 +467,16 @@ class _GameScreenState extends State<GameScreen> {
     dead = false;
   }
 
+  /// Gets Center offset for postion cell `pos` in Matrix
   Offset getOffsetforPos(int pos) {
     return Offset(
         ((pos % xcount) * 16) + 8, ((pos ~/ xcount % ycount) * 16) + 8);
   }
 
+  /// Gets Snakebody according to the position in list and direction
+  /// Snake body has head, tail and open mouth types
   Widget getSnakeBody(SnakeBody snake, int index, int length) {
     index = index + 1;
-
     if (index == 1) {
       return RotatedBox(
           quarterTurns: snake.direction == Direction.down
@@ -488,6 +504,8 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  /// Init Board or Reset board
+  /// and variables
   initBoard() {
     snakeBodys = [
       SnakeBody(
@@ -524,6 +542,7 @@ class _GameScreenState extends State<GameScreen> {
     do {
       food.position = Random().nextInt(770);
     } while ([100, 101, 102, 103, 104, 105].contains(food.position));
+    direction = Direction.right;
     deathFlicker = false;
     food.offset = getOffsetforPos(food.position);
     food.count = 0;
@@ -588,19 +607,28 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  /// Starts the Snake moving
   startGame() {
+    // indicates that game has started
     start = true;
+
+    // Reset Board
     initBoard();
-    direction = Direction.right;
+
+    // Cancel Timer if old timer is runing
     if (timer != null) {
       timer!.cancel();
       timer == null;
     }
+    // Assign new timer
     timer = Timer.periodic(
         Duration(
             milliseconds: speeds[
                 Provider.of<MenuAndSettingsProvider>(context, listen: false)
                     .level]!), (timer) {
+      /// This will be called every duration
+
+      // if true this will display moves counter on top Rigth
       if (bigFood.show) {
         bigFood.time -= 1;
         if (bigFood.time <= 0) {
@@ -609,8 +637,11 @@ class _GameScreenState extends State<GameScreen> {
           bigFood.time = 40;
         }
       }
+
+      // Call update snake to update to new postion
       updateSnake();
 
+      // call gameOver
       if (gameOver()) {
         start = false;
         this.timer!.cancel();
@@ -618,6 +649,7 @@ class _GameScreenState extends State<GameScreen> {
         int count = 0;
         provider.playDiedPlayer();
         dead = true;
+        // This is for death fliker effect
         Timer.periodic(const Duration(milliseconds: 300), (timer) {
           count++;
           deathFlicker = !deathFlicker;
@@ -633,9 +665,13 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   updateSnake() {
+    /// There is no walls in this game we need to make sure snake moves through
+    /// and comes from other side
     setState(() {
       switch (direction) {
         case Direction.down:
+          // If Snake is already on Last Row of matrix
+          // we need to make it come from top on same column
           if (snakeBodys.last.position > 748) {
             snakeBodys.add(SnakeBody(
                 position: snakeBodys.last.position - 770 + xcount,
@@ -643,6 +679,7 @@ class _GameScreenState extends State<GameScreen> {
                 offset:
                     getOffsetforPos(snakeBodys.last.position - 770 + xcount)));
           } else {
+            // else we just move to next row of matrix
             snakeBodys.add(SnakeBody(
                 position: snakeBodys.last.position + xcount,
                 direction: direction,
@@ -650,6 +687,8 @@ class _GameScreenState extends State<GameScreen> {
           }
           break;
         case Direction.up:
+          // If snake is already at the Top row of matrix
+          // we need to make it come from bottom on same column
           if (snakeBodys.last.position < xcount) {
             snakeBodys.add(SnakeBody(
                 position: snakeBodys.last.position + 770 - xcount,
@@ -657,6 +696,7 @@ class _GameScreenState extends State<GameScreen> {
                 offset:
                     getOffsetforPos(snakeBodys.last.position + 770 - xcount)));
           } else {
+            // else we just move to next row of matrix
             snakeBodys.add(SnakeBody(
                 position: snakeBodys.last.position - xcount,
                 direction: direction,
@@ -664,6 +704,8 @@ class _GameScreenState extends State<GameScreen> {
           }
           break;
         case Direction.right:
+          // If snake is already at the last column of the matrix
+          // we need make it come from first column the is left
           if ((snakeBodys.last.position + 1) % xcount == 0) {
             snakeBodys.add(SnakeBody(
                 position: snakeBodys.last.position + 1 - xcount,
@@ -678,6 +720,8 @@ class _GameScreenState extends State<GameScreen> {
           }
           break;
         case Direction.left:
+          // If snake is already at the fist column of the matrix
+          // we need make it come from first column the is left
           if (snakeBodys.last.position % xcount == 0) {
             snakeBodys.add(SnakeBody(
                 position: snakeBodys.last.position - 1 + xcount,
@@ -693,18 +737,29 @@ class _GameScreenState extends State<GameScreen> {
           break;
         default:
       }
+      // If the Snake last position that is head is same as Food position
+      // and get new food postion
       if (snakeBodys.last.position == food.position) {
+        /// Played eat sound
         provider.playEatSound();
+
+        /// We can't have food generated on postions of the snake body
         totalSpot.removeWhere((element) =>
             snakeBodys.map((e) => e.position).toList().contains(element));
 
+        /// get new postion for food once its eaten by snake
         food.position = totalSpot[Random().nextInt(totalSpot.length - 1)];
         food.offset = getOffsetforPos(food.position);
+        // increase count
         food.count += 1;
+        // Add score
         score = score + 5;
+        // This to add BigFood on screen for every 5 food eaten by snake
         bigFoodShowCounter += 1;
         if (bigFoodShowCounter == 5) {
+          // Then we reset this to generate again
           bigFoodShowCounter = 0;
+          // we need show becs this food will disapear if not eaten within moves
           bigFood.show = true;
           do {
             bigFood.position =
@@ -712,10 +767,15 @@ class _GameScreenState extends State<GameScreen> {
           } while (food.position == bigFood.position);
           bigFood.offset = getOffsetforPos(bigFood.position);
         }
+
+        /// This is to repopulate Total available spots to also increases randrom postions
         if (totalSpot.length < (770 / 2)) {
           totalSpot = List.generate(770, (index) => index);
         }
-      } else if (bigFood.show && snakeBodys.last.position == bigFood.position) {
+      }
+      // We do same for bigFood also we check weather snake head that is last
+      // position is same as bigFood and increase count
+      else if (bigFood.show && snakeBodys.last.position == bigFood.position) {
         provider.playEatSound();
         bigFoodShowCounter = 0;
         bigFood.show = false;
@@ -723,6 +783,8 @@ class _GameScreenState extends State<GameScreen> {
         bigFood.count += 1;
         bigFood.time = 40;
       } else {
+        /// If Snake didn't eat any Food or BigFood we need to remove first
+        /// element to keep snake lenght same
         snakeBodys.removeAt(0);
       }
     });

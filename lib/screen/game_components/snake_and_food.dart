@@ -4,7 +4,6 @@ import 'package:retro_snake_game/constants/constants.dart';
 class BigFood {
   int position = 0;
   Offset offset = Offset.zero;
-  final int socre = 10;
   int count = 0;
   bool show = false;
   int time = 40;
@@ -17,7 +16,6 @@ class BigFood {
 class Food {
   int position = 0;
   Offset offset = Offset.zero;
-  final int socre = 5;
   int count = 0;
   Food({
     required this.position,
